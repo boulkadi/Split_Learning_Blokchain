@@ -1,135 +1,160 @@
-# 🚀 Split Learning & Blockchain Registry
+# Split Learning & Blockchain Registry
 
-Ce projet implémente une architecture de **Split Learning** (Apprentissage Divisé) sécurisée par une **Blockchain Ethereum (Ganache)**.  
-Il permet à plusieurs hôpitaux (clients) d'entraîner un modèle d'IA de manière collaborative sans partager leurs données brutes, tout en enregistrant les preuves d'entraînement sur un registre immuable.
+## Objectif du Projet
 
----
+Ce Projet vise à démontrer la faisabilité d'une architecture de **Split Learning sécurisée par Blockchain**. Il permet à plusieurs clients (ex : hôpitaux ou institutions) de collaborer pour entraîner un modèle d'IA sans partager leurs données brutes, tout en garantissant la **traçabilité et immuabilité** des preuves d'entraînement grâce à un Smart Contract Ethereum (Ganache).
 
-## 🧠 1. Concept du Projet
+### Valeur Ajoutée
 
-### Le Split Learning
-Le modèle est divisé en deux parties pour protéger la vie privée :
+- **Confidentialité des données** : Les données brutes restent locales sur le client
+- **Transparence et confiance** : Chaque round d'entraînement est enregistré sur la blockchain
+- **Collaboration multi-parties** : Plusieurs clients peuvent participer simultanément
+- **Suivi des performances** : Accuracy et Loss stockés dans la blockchain
 
-- **Client (Partie basse)**  
-  Reçoit les images MNIST, extrait les caractéristiques initiales et génère des *Smashed Data*.
+## Périmètre Couvert
 
-- **Serveur (Partie haute)**  
-  Reçoit ces données compressées, termine l'inférence, calcule la perte (*Loss*) et renvoie les gradients pour la mise à jour locale du client.
+### Fonctionnalités Implémentées
 
----
+#### **Split Learning**
 
-### L’Intégration Blockchain
-La Blockchain sert de couche de confiance. À chaque round :
+- **Client (partie basse du modèle)** : Prétraitement des images (MNIST), génération des *smashed data*
+- **Serveur (partie haute du modèle)** : Achève l'inférence, calcule les gradients et renvoie les mises à jour au client
+- **Round d'entraînement sécurisé** : Hash SHA-256 des poids locaux avant enregistrement sur blockchain
 
-1. Chaque client génère un **Hash SHA-256** de ses poids locaux.
-2. Les métriques (**Accuracy** et **Loss**) sont envoyées vers un **Smart Contract Solidity**.
-3. Ces données sont gravées sur **Ganache**, rendant l'historique **infalsifiable**.
+#### **Blockchain**
 
----
+- Smart Contract Solidity pour le registre d'entraînement
+- Déploiement sur **Ganache GUI**
+- Stockage immuable des métriques : Accuracy, Loss, Hash des poids locaux
+- Visualisation des résultats via script Python
 
-## 🛠️ 2. Prérequis
+## Technologies Utilisées
 
-- **Python 3.10+**
-- **Ganache GUI** : https://trufflesuite.com/ganache/
-- **uv** : Gestionnaire de paquets Python ultra-rapide
+### **Intelligence Artificielle**
 
----
+- **PyTorch / Torchvision** : Réseaux de neurones pour le split learning
+- **Transforms MNIST** : Prétraitement et normalisation des données
 
-## ⚙️ 3. Installation et Configuration
+### **Blockchain**
 
-### Installation de `uv` (Windows – PowerShell)
+- **Web3.py** : Interaction Python avec Ethereum
+- **Solidity** : Smart Contract `TrainingRegistry.sol`
+- **Ganache** : Blockchain locale pour tests
 
-    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+### **Interface & Scripts**
 
-### Setup de l’environnement
+- Scripts Python pour :
+  - Entraînement (`train.py`)
+  - Visualisation des métriques (`visualize_results.py`)
+    
+### **Infrastructure**
 
-Depuis la racine du projet **split-learning-blockchain** :
+- **Python 3.12+**
+- **UV** : Gestionnaire de dépendances
 
-    # Créer l’environnement virtuel
-    uv venv
+## Instructions de Lancement
 
-    # Activer l’environnement
-    # Windows
-    .venv\Scripts\activate
+### **Prérequis**
 
-    # Mac / Linux
-    source .venv/bin/activate
+- Python 3.12+
+- Ganache GUI: [Télécharger Ganache](https://trufflesuite.com/ganache/)
+- UV (gestionnaire de dépendances Python)
 
-    # Installer les dépendances
-    uv pip install torch torchvision web3 py-solc-x matplotlib
+### **Installation Locale**
 
----
+#### 1. Cloner le projet
 
-## 🏦 4. Configuration de Ganache
+```bash
+cd split-learning-blockchain
+```
 
-1. Lancer **Ganache GUI**
-2. Créer un nouveau **Workspace Ethereum**
-3. Vérifier l’URL RPC (par défaut) :  
-   http://127.0.0.1:7545
-4. Copier les **clés privées** des 4 premiers comptes Ganache
-5. Les coller dans `scripts/train.py` dans la liste `all_private_keys`
+#### 2. Installer UV (gestionnaire de dépendances)
 
----
+```bash
+# Windows (PowerShell)
+irm https://astral.sh/uv/install.ps1 | iex
+```
 
-## 🚀 5. Exécution du Projet
+#### 3. Créer l'environnement virtuel
 
-### Étape 1 : Entraînement et Enregistrement Blockchain
+```bash
+uv venv
+```
 
-Cette commande compile le contrat, le déploie, télécharge MNIST et lance les rounds d’entraînement :
+#### 4. Activer l'environnement
 
-    python -m scripts.train
+```bash
+# Windows
+.venv\Scripts\activate
 
-### Étape 2 : Visualisation Blockchain
+# Mac/Linux
+source .venv/bin/activate
+```
 
-Extraction des données directement depuis le smart contract :
+#### 5. Installer les dépendances
 
-    python -m scripts.visualize_results
+```bash
+uv sync
+```
 
-Les graphiques sont automatiquement sauvegardés dans `data/images/`.
+### **Configuration Ganache** 
+1. Lancer Ganache GUI
+2. Créer un nouveau Workspace Ethereum
+3. Vérifier l'URL RPC (par défaut `http://127.0.0.1:7545`)
+4. Copier les clés privées des 4 premiers comptes Ganache
+5. Les ajouter dans `scripts/train.py` dans la liste `private_keys`
 
----
+### **Exécution du Projet**
 
-## 📂 6. Structure du Dossier
+#### Étape 1 : Entraînement et enregistrement
 
-    split-learning-blockchain/
-    ├── data/
-    │   ├── datasets/          # Cache MNIST (ignoré par Git)
-    │   └── images/            # Graphiques générés
-    │
-    ├── scripts/
-    │   ├── train.py           # Orchestrateur (Déploiement + Entraînement)
-    │   └── visualize_results.py
-    │
-    ├── src/
-    │   └── split_learning_blockchain/
-    │       ├── blockchain/    # Smart Contract et Web3 Manager
-    │       ├── core/          # Client, Server, Coordinator
-    │       ├── models/        # Réseaux de neurones (Split Learning)
-    │       ├── data/          # MNIST Loader sécurisé
-    │       └── utils/         # Logger, crypto, métriques
-    │
-    ├── contract_info.json     # Adresse et ABI du contrat (auto-généré)
-    ├── pyproject.toml
-    ├── README.md
-    └── .gitignore
+```bash
+python -m scripts.train
+```
 
----
+#### Étape 2 : Visualisation Blockchain
 
-## 📊 7. Visualisation Attendue
+```bash
+python -m scripts.visualize_results
+```
 
-Le script de visualisation génère deux graphiques **certifiés par la blockchain** :
+Les graphiques sont sauvegardés automatiquement dans `data/images/`.
 
-- **Évolution de la Précision (Accuracy)**  
-  Convergence du modèle global
+## Structure du Projet
 
-- **Évolution de la Perte (Loss)**  
-  Diminution de l’erreur au fil des transactions
+```
+blockchain/
+├── data/
+│   ├── datasets/        # Cache MNIST (ignoré par Git)
+│   └── images/          # Graphiques générés
+├── scripts/
+│   ├── train.py         # Orchestrateur (Déploiement + Entraînement)
+│   ├── visualize_results.py
+│  
+├── src/
+│   └── blockchain/
+│       ├── blockchain_code/  # Smart Contract + Web3 Manager
+│       ├── core/        # Client, Server, Coordinator
+│       ├── models/      # Réseaux de neurones Split
+│       ├── data/        # Loader MNIST sécurisé
+│       └── utils/       # Logger, crypto, métriques
+├── contract_info.json   # Adresse & ABI du contrat
+├── pyproject.toml       # Dépendances UV
+├── README.md
+└── .gitignore
+```
 
----
+## Vision d'Évolution
 
-## ✅ Résumé
+- Déploiement sur Ethereum Testnet / Mainnet
+- Interface web pour suivre les rounds d'entraînement et métriques
+- Support multi-client réel pour hôpitaux ou entreprises
+- Monitoring et alertes sur la blockchain
+- Intégration avec des dashboards (Plotly / Streamlit)
 
-- ✔️ Apprentissage collaboratif sans partage de données
-- ✔️ Traçabilité et immuabilité via blockchain
-- ✔️ Architecture modulaire propre et extensible
-- ✔️ Projet prêt pour recherche ou démonstration académique
+## Métriques de Succès
+
+- Convergence du modèle global (Accuracy)
+- Réduction progressive de la Loss
+- Traçabilité complète via blockchain
+- Confidentialité garantie des données locales

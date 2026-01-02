@@ -203,7 +203,7 @@ L'interface de Ganache sert de preuve d'audit pour l'activité du réseau distri
 
 ![Historique des blocs](data/images/blocks.PNG)
 
-**Blocs minés** : Les blocs 11 à 16 ont été générés en temps réel pour enregistrer chaque round d'entraînement.
+**Blocs minés** : Les blocs ont été générés en temps réel pour enregistrer chaque round d'entraînement.
 
 ![Détails des transactions de contrat](data/images/contracts.PNG)
 

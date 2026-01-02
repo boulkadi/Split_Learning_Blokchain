@@ -97,7 +97,8 @@ source .venv/bin/activate
 uv sync
 ```
 
-### **Configuration Ganache** 
+### **Configuration Ganache**
+
 1. Lancer Ganache GUI
 2. Créer un nouveau Workspace Ethereum
 3. Vérifier l'URL RPC (par défaut `http://127.0.0.1:7545`)
@@ -129,8 +130,7 @@ blockchain/
 │   └── images/          # Graphiques générés
 ├── scripts/
 │   ├── train.py         # Orchestrateur (Déploiement + Entraînement)
-│   ├── visualize_results.py
-│  
+│   └── visualize_results.py
 ├── src/
 │   └── blockchain/
 │       ├── blockchain_code/  # Smart Contract + Web3 Manager
@@ -158,3 +158,73 @@ blockchain/
 - Réduction progressive de la Loss
 - Traçabilité complète via blockchain
 - Confidentialité garantie des données locales
+
+---
+
+#  Rapport d'Analyse des Résultats : IA & Blockchain
+
+Ce document présente les preuves de réussite du projet basées sur les données réelles extraites lors de l'exécution finale. Il démontre la synergie entre l'apprentissage distribué (**Split Learning**) et la certification par **Blockchain**.
+
+##  1. Initialisation et Déploiement
+
+Le terminal confirme que le cycle de vie du projet commence par la sécurisation de l'infrastructure.
+
+![Capture du déploiement dans le terminal](data/images/terminal1.PNG)
+
+**Déploiement du Contrat** : Le Smart Contract `TrainingRegistry` a été déployé avec succès sur Ganache à l'adresse `0xa2b7E1164840c25f56FBf4E644548955306894d7`.
+
+**Optimisation des Données** : Le système a identifié le dataset MNIST local dans `data/datasets`, évitant un téléchargement inutile.
+
+##  2. Performance de l'Entraînement
+
+Les logs de la console montrent une progression constante et harmonisée entre les 3 clients.
+
+![Logs de progression des rounds](data/images/terminal2.PNG)
+
+**Convergence du Modèle** : La précision (Accuracy) passe de **~85%** au round 1 à **98.2%** au round 5.
+
+**Stabilité de la Perte** : La valeur de la `Loss` diminue de façon régulière pour tous les clients.
+
+**Validation Blockchain** : Chaque étape est suivie de la confirmation : *"Envoi à la blockchain pour Client X..."*.
+
+##  3. Preuves d'Activité sur Ganache (Blockchain)
+
+L'interface de Ganache sert de preuve d'audit pour l'activité du réseau distribué.
+
+### État des Acteurs (Clients)
+
+![Liste des comptes Ganache](data/images/clients.PNG)
+
+**Adresses des Clients** : Les adresses comme `0x476...` montrent une activité réelle avec un `TX COUNT` de 5 (un par round).
+
+**Consommation de Gaz** : Les soldes ont légèrement diminué (passant de 100 ETH à ~99.98 ETH), ce qui représente le coût de l'immuabilité.
+
+### Blocs et Transactions
+
+![Historique des blocs](data/images/blocks.PNG)
+
+**Blocs minés** : Les blocs 11 à 16 ont été générés en temps réel pour enregistrer chaque round d'entraînement.
+
+![Détails des transactions de contrat](data/images/contracts.PNG)
+
+**Appels de Contrat** : On observe les appels `CONTRACT CALL` vers la fonction `recordTraining` depuis les adresses clients.
+
+##  4. Analyse Graphique Certifiée
+
+Ce graphique est le résultat final, généré **exclusivement** à partir des données extraites du Smart Contract après l'entraînement.
+
+![Graphiques de précision et de perte](data/images/split_learning_results_20260102_183445.png)
+
+**Précision (Gauche)** : La courbe montre une montée rapide vers 98%, prouvant l'efficacité du Split Learning.
+
+**Perte (Droite)** : La réduction drastique de la perte confirme que le serveur renvoie les bons gradients pour corriger les modèles locaux.
+
+##  5. Conclusion
+
+Les résultats valident l'architecture :
+
+1. **Confidentialité** : Aucune donnée brute n'a été transmise.
+2. **Intégrité** : Chaque progrès est auditable sur Ganache.
+3. **Performance** : Le modèle atteint **98%+** de précision.
+
+---

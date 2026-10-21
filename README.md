@@ -11,6 +11,19 @@ Ce Projet vise à démontrer la faisabilité d'une architecture de **Split Learn
 - **Collaboration multi-parties** : Plusieurs clients peuvent participer simultanément
 - **Suivi des performances** : Accuracy et Loss stockés dans la blockchain
 
+## Architecture Globale
+
+<p align="center">
+  <img src="architecture_SL_blokchain.svg" alt="Architecture du Split Learning sécurisé par Blockchain" width="100%">
+</p>
+
+Le schéma ci-dessus illustre le fonctionnement complet du système :
+
+1. **Smashed data** : chaque client traite ses données MNIST locales avec la partie basse du modèle et envoie uniquement les activations intermédiaires au serveur.
+2. **Gradients** : le serveur achève l'inférence avec la partie haute du modèle, calcule la loss et renvoie les gradients aux clients.
+3. **Enregistrement blockchain** : à chaque round, le client calcule le hash SHA-256 de ses poids locaux et enregistre le hash, l'accuracy et la loss via `recordTraining()` dans le Smart Contract `TrainingRegistry`.
+4. **Visualisation** : `visualize_results.py` lit les métriques directement depuis le contrat et génère les graphiques dans `data/images/`.
+
 ## Périmètre Couvert
 
 ### Fonctionnalités Implémentées
@@ -46,7 +59,7 @@ Ce Projet vise à démontrer la faisabilité d'une architecture de **Split Learn
 - Scripts Python pour :
   - Entraînement (`train.py`)
   - Visualisation des métriques (`visualize_results.py`)
-    
+
 ### **Infrastructure**
 
 - **Python 3.12+**
@@ -127,7 +140,7 @@ Les graphiques sont sauvegardés automatiquement dans `data/images/`.
 blockchain/
 ├── data/
 │   ├── datasets/        # Cache MNIST (ignoré par Git)
-│   └── images/          # Graphiques générés
+│   └── images/          # Graphiques générés + architecture.svg
 ├── scripts/
 │   ├── train.py         # Orchestrateur (Déploiement + Entraînement)
 │   └── visualize_results.py
@@ -161,11 +174,11 @@ blockchain/
 
 ---
 
-#  Rapport d'Analyse des Résultats : IA & Blockchain
+# Rapport d'Analyse des Résultats : IA & Blockchain
 
 Ce document présente les preuves de réussite du projet basées sur les données réelles extraites lors de l'exécution finale. Il démontre la synergie entre l'apprentissage distribué (**Split Learning**) et la certification par **Blockchain**.
 
-##  1. Initialisation et Déploiement
+## 1. Initialisation et Déploiement
 
 Le terminal confirme que le cycle de vie du projet commence par la sécurisation de l'infrastructure.
 
@@ -175,7 +188,7 @@ Le terminal confirme que le cycle de vie du projet commence par la sécurisation
 
 **Optimisation des Données** : Le système a identifié le dataset MNIST local dans `data/datasets`, évitant un téléchargement inutile.
 
-##  2. Performance de l'Entraînement
+## 2. Performance de l'Entraînement
 
 Les logs de la console montrent une progression constante et harmonisée entre les 3 clients.
 
@@ -187,7 +200,7 @@ Les logs de la console montrent une progression constante et harmonisée entre l
 
 **Validation Blockchain** : Chaque étape est suivie de la confirmation : *"Envoi à la blockchain pour Client X..."*.
 
-##  3. Preuves d'Activité sur Ganache (Blockchain)
+## 3. Preuves d'Activité sur Ganache (Blockchain)
 
 L'interface de Ganache sert de preuve d'audit pour l'activité du réseau distribué.
 
@@ -209,7 +222,7 @@ L'interface de Ganache sert de preuve d'audit pour l'activité du réseau distri
 
 **Appels de Contrat** : On observe les appels `CONTRACT CALL` vers la fonction `recordTraining` depuis les adresses clients.
 
-##  4. Analyse Graphique Certifiée
+## 4. Analyse Graphique Certifiée
 
 Ce graphique est le résultat final, généré **exclusivement** à partir des données extraites du Smart Contract après l'entraînement.
 
@@ -219,7 +232,7 @@ Ce graphique est le résultat final, généré **exclusivement** à partir des d
 
 **Perte (Droite)** : La réduction drastique de la perte confirme que le serveur renvoie les bons gradients pour corriger les modèles locaux.
 
-##  5. Conclusion
+## 5. Conclusion
 
 Les résultats valident l'architecture :
 
